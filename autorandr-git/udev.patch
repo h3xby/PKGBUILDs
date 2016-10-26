@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index a7c4f98..25baf52 100644
+--- a/Makefile
++++ b/Makefile
+@@ -93,7 +93,7 @@ endif
+ 
+ install_udev:
+ 	$(if $(UDEV_RULES_DIR),,$(error UDEV_RULES_DIR is not defined))
+-	install -D -m 644 contrib/udev/40-monitor-hotplug.rules ${DESTDIR}/${UDEV_RULES_DIR}/40-monitor-hotplug.rules
++	install -D -m 644 contrib/udev/40-monitor-hotplug.rules ${DESTDIR}/${UDEV_RULES_DIR}/rules.d/40-monitor-hotplug.rules
+ ifeq (${USER},root)
+ 	udevadm control --reload-rules
+ else
