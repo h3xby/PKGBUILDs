@@ -1,0 +1,3 @@
+post_install(){
+  chown clickhouse etc/clickhouse-client/{,config.xml}
+}

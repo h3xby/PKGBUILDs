@@ -1,0 +1,30 @@
+# Maintainer: Dmitry Kontsevoy <dmitry.kontsevoy@gmail.com>
+
+pkgname=clickhouse-server-base
+pkgver=1.1.54127
+pkgrel=1
+pkgdesc='clickhouse-server binary'
+arch=('x86_64')
+url="http://clickhouse.yandex"
+license=('APACHE')
+install="$pkgname.install"
+source=("http://repo.yandex.ru/clickhouse/trusty/pool/main/c/clickhouse/${pkgname}_${pkgver}_amd64.deb"
+        "${pkgname}.sysusers"
+        "clickhouse.service"
+        "limits.conf")
+md5sums=('e1ac5543c7fd65fda52700ac43c07fec'
+         '9042e05f19045f7ccc615c645fbc59f2'
+         '59544f0c1e8529d5aaa91300a1dff943'
+         'f02e35e481fb139991713c3dc191437b')
+
+prepare() {
+  tar -xf data.tar.gz
+}
+
+package() {
+  cp -dr --no-preserve=ownership usr "${pkgdir}"/
+
+  install -Dm 644 limits.conf "$pkgdir/etc/security/limits.d/clickhouse.conf"
+  install -Dm 644 clickhouse.service "${pkgdir}/usr/lib/systemd/system/clickhouse.service"
+  install -Dm 644 clickhouse-server-base.sysusers "${pkgdir}/usr/lib/sysusers.d/$pkgname.conf"
+}

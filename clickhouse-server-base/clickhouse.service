@@ -1,0 +1,15 @@
+[Unit]
+Description = Clichkouse DB Server
+
+[Service]
+User = clickhouse
+Group = clickhouse
+PIDFile = /var/run/clickhouse-server.pid
+ExecStart = /usr/bin/clickhouse-server --server --config-file /etc/clickhouse-server/config.xml --pid-file /var/run/clickhouse-server.pid
+Restart = on-abort
+StartLimitInterval = 60
+StartLimitBurst = 10
+LimitNOFILE= 262144
+
+[Install]
+WantedBy = multi-user.target

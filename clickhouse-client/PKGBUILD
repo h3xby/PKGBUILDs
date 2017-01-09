@@ -1,0 +1,25 @@
+# Maintainer: Dmitry Kontsevoy <dmitry.kontsevoy@gmail.com>
+
+pkgname=clickhouse-client
+pkgver=1.1.54127
+pkgrel=1
+pkgdesc='ClickHouse client and additional tools such as clickhouse-local and clickhouse-benchmark.'
+arch=('x86_64')
+url="https://github.com/yandex/ClickHouse"
+license=('APACHE')
+depends=("clickhouse-server-base=$pkgver")
+conflicts=("clickhouse-server-common")
+install="$pkgname.install"
+backup=('etc/clickhouse-client/config.xml')
+source=("http://repo.yandex.ru/clickhouse/trusty/pool/main/c/clickhouse/${pkgname}_${pkgver}_amd64.deb"
+        "$pkgname.install")
+md5sums=('b6f74d1b887ea1ae3f8296665c0a2ad0'
+         '349fc1c7d54dd823a578af27ed88105d')
+
+prepare() {
+  tar -xf data.tar.gz
+}
+
+package() {
+  cp -dr --no-preserve=ownership {etc,usr} "${pkgdir}"/
+}

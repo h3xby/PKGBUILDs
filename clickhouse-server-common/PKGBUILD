@@ -1,0 +1,28 @@
+# Maintainer: Dmitry Kontsevoy <dmitry.kontsevoy@gmail.com>
+
+pkgname=clickhouse-server-common
+pkgver=1.1.54127
+pkgrel=1
+pkgdesc='Common configuration files for clickhouse-server-base package'
+arch=('x86_64')
+url="http://clickhouse.yandex"
+license=('APACHE')
+depends=("clickhouse-server-base=$pkgver")
+provides=("clickhouse-client=$pkgver")
+conflicts=("clickhouse-client")
+backup=('etc/clickhouse-client/config.xml'
+        'etc/clickhouse-server/config.xml'
+        'etc/clickhouse-server/users.xml')
+install="$pkgname.install"
+source=("http://repo.yandex.ru/clickhouse/trusty/pool/main/c/clickhouse/${pkgname}_${pkgver}_amd64.deb"
+        "$pkgname.install")
+md5sums=('d85f46195c1ec55bcaa5ca7ab2bdbf07'
+         'ed93e49c2bb6d621fcf4fc5d1fe9b650')
+
+prepare() {
+  tar -xf data.tar.gz
+}
+
+package() {
+  cp -dr --no-preserve=ownership {etc,usr} "${pkgdir}"/
+}

@@ -1,0 +1,14 @@
+datadir=/opt/clickhouse
+
+post_install(){
+  # create clickhouse user & group
+  systemd-sysusers clickhouse-server-base.conf
+
+  if [[ ! -e $datadir ]]; then
+    install -dm700 -o clickhouse -g clickhouse $datadir
+  fi
+}
+
+post_upgrade(){
+  post_install
+}
