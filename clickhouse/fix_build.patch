@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 07792104f..f196ad13e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -94,12 +94,12 @@ else ()
+ endif ()
+ 
+ set (CMAKE_BUILD_COLOR_MAKEFILE          ON)
+-set (CMAKE_CXX_FLAGS                     "-std=gnu++1y ${APPLE_EXTRA_CXX_FLAG} -fno-omit-frame-pointer ${COMMON_WARNING_FLAGS} ${CXX_WARNING_FLAGS} ${MACHINE_FLAGS} ${GLIBC_COMPATIBILITY_COMPILE_FLAGS} ${CXX11_ABI_FLAGS}")
++set (CMAKE_CXX_FLAGS                     "$ENV{CXXFLAGS} -std=gnu++1y ${APPLE_EXTRA_CXX_FLAG} -fno-omit-frame-pointer ${COMMON_WARNING_FLAGS} ${CXX_WARNING_FLAGS} ${MACHINE_FLAGS} ${GLIBC_COMPATIBILITY_COMPILE_FLAGS} ${CXX11_ABI_FLAGS}")
+ set (CMAKE_CXX_FLAGS_RELEASE             "-O3 -DNDEBUG")
+ set (CMAKE_CXX_FLAGS_RELWITHDEBINFO      "-O3 -g")
+ set (CMAKE_CXX_FLAGS_DEBUG               "-O0 -g3 -ggdb3 -fno-inline")
+ 
+-set (CMAKE_C_FLAGS                       "-fno-omit-frame-pointer ${COMMON_WARNING_FLAGS} ${MACHINE_FLAGS} ${GLIBC_COMPATIBILITY_COMPILE_FLAGS} ${CXX11_ABI_FLAGS}")
++set (CMAKE_C_FLAGS                       "$ENV{CFLAGS} -fno-omit-frame-pointer ${COMMON_WARNING_FLAGS} ${MACHINE_FLAGS} ${GLIBC_COMPATIBILITY_COMPILE_FLAGS} ${CXX11_ABI_FLAGS}")
+ set (CMAKE_C_FLAGS_RELEASE               "-O3 -DNDEBUG")
+ set (CMAKE_C_FLAGS_RELWITHDEBINFO        "-O3 -g")
+ set (CMAKE_C_FLAGS_DEBUG                 "-O0 -g3 -ggdb3 -fno-inline")
+diff --git a/dbms/src/Server/CMakeLists.txt b/dbms/src/Server/CMakeLists.txt
+index 83bfb253e..61d933ac3 100644
+--- a/dbms/src/Server/CMakeLists.txt
++++ b/dbms/src/Server/CMakeLists.txt
+@@ -42,7 +42,3 @@ INSTALL(
+     FILES metrika.conf
+     DESTINATION /etc/security/limits.d
+     COMPONENT clickhouse)
+-
+-# Adding init.d support
+-include (${ClickHouse_SOURCE_DIR}/cmake/create_init_script.cmake)
+-create_init_script (clickhouse-server clickhouse-server)

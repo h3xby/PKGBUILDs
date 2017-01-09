@@ -1,0 +1,58 @@
+# Maintainer: Dmitry Kontsevoy <dmitry.kontsevoy@gmail.com>
+
+pkgname=clickhouse
+pkgver=1.1.54127
+pkgrel=1
+pkgdesc='Analytics Database'
+arch=('x86_64')
+url="http://clickhouse.yandex"
+license=('APACHE')
+depends=('termcap' 'boost-libs' 'libmariadbclient' 'libtool' 'openssl' 'readline')
+makedepends=('cmake' 'boost')
+install="$pkgname.install"
+source=("https://github.com/yandex/ClickHouse/archive/v${pkgver}-stable.tar.gz"
+        "$pkgname.sysusers"
+        "$pkgname.service"
+        "fix_build.patch")
+md5sums=('541a803c9a856390dd207e320eafc7fe'
+         '9efc76e3357bf6f5b6b2f68b56d18efb'
+         '50ac1bd61ba23a665bf4a413d0f9fb64'
+         '6be002554735e3670d3c598bdba67534')
+_maketargets=('clickhouse' 'compressor' 'clickhouse-client' 'clickhouse-server' 'clickhouse-benchmark')
+
+prepare() {
+  patch -d "$srcdir/ClickHouse-${pkgver}-stable" -p1 < "$srcdir/fix_build.patch"
+}
+
+build() {
+  env > /tmp/makepkg.env
+  export USE_INTERNAL_BOOST_LIBRARY=FALSE
+  export USE_STATIC_LIBRARIES=FALSE
+
+  cd "$srcdir/ClickHouse-${pkgver}-stable"
+
+  if [ ! -d build ]; then mkdir build; fi
+  cd build
+  cmake .. -DUSE_STATIC_LIBRARIES=OFF -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON
+  for i in "${_maketargets[@]}"; do
+    make $i;
+  done
+}
+
+check() {
+  cd "$srcdir/ClickHouse-${pkgver}-stable/build"
+  make check
+}
+
+package() {
+  cd "$srcdir/ClickHouse-${pkgver}-stable/build"
+
+  for i in "${_maketargets[@]}"; do
+    echo Install $i
+    DESTDIR="$pkgdir" cmake -DCOMPONENT=$i -P cmake_install.cmake
+  done
+
+  cd "$srcdir"
+  install -Dm 644 $pkgname.service "${pkgdir}/usr/lib/systemd/system/$pkgname.service"
+  install -Dm 644 $pkgname.sysusers "${pkgdir}/usr/lib/sysusers.d/$pkgname.conf"
+}

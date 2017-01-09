@@ -1,0 +1,14 @@
+datadir=/opt/clickhouse
+
+post_install(){
+  # create metrika user & group
+  systemd-sysusers clickhouse.conf
+
+  if [[ ! -e $datadir ]]; then
+    install -dm700 -o metrika -g metrika $datadir
+  fi
+
+  mkdir -p /etc/compressor/conf.d
+  chown -R metrika:metrika /etc/compressor
+  chown -R metrika:metrika /etc/clickhouse-{server,client}
+}
