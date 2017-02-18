@@ -2,5 +2,7 @@
 
 if [ "$ACTION" == "add" ];
 then
-    /usr/bin/k380_conf -d $DEVNAME -f on
+  DEVNAME=$( cat $1/device/hidraw/hidraw*/uevent | grep DEVNAME )
+  echo /dev/${DEVNAME#*=}
+  /usr/bin/k380_conf -d /dev/${DEVNAME#*=} -f on
 fi
