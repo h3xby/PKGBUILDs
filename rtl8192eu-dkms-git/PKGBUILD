@@ -1,30 +1,24 @@
 pkgname=rtl8192eu-dkms-git
 _pkgbase=rtl8192eu
-pkgver=9e65859
+pkgver=54a6b17
 pkgrel=1
 pkgdesc="A kernel module for Realtek 8192eu network cards with dkms support"
 url="https://github.com/jpostma/rtl8192eu"
 license=("GPL")
 arch=('i686' 'x86_64')
 depends=('dkms')
-source=("git+https://github.com/jpostma/rtl8192eu.git"
-        "dkms.conf"
-        "001-fixes.patch")
+source=("git+https://github.com/Mange/rtl8192eu-linux-driver.git"
+        "dkms.conf")
 install="${pkgname}.install"
 sha256sums=('SKIP'
-            '5b5ec1e7e20b9ebcd16f50763c01fff13b3477f8e1f0485c8053094530dd16b9'
-            '0ede40de0a2af794c4c3c2e662d38fda07090f1791429e602eb3f600ab82bbc5')
+            '5b5ec1e7e20b9ebcd16f50763c01fff13b3477f8e1f0485c8053094530dd16b9')
 
 pkgver() {
-  cd "${srcdir}/${_pkgbase}"
+  cd "${srcdir}/rtl8192eu-linux-driver"
 	git describe --always | sed 's|-|.|g' | cut -f2 -d"v"
 }
-prepare() {
-  cd ${srcdir}/${_pkgbase}
-  patch -f -Np1 -i ${srcdir}/001-fixes.patch
-}
 package() {
-	cd ${srcdir}/${_pkgbase}
+	cd "${srcdir}/rtl8192eu-linux-driver"
 	mkdir -p ${pkgdir}/usr/src/${_pkgbase}-${pkgver}
 	cp -pr * ${pkgdir}/usr/src/${_pkgbase}-${pkgver}
 	cp ${srcdir}/dkms.conf ${pkgdir}/usr/src/${_pkgbase}-${pkgver}
