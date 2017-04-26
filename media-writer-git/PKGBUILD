@@ -1,0 +1,32 @@
+_pkgname=media-writer
+pkgname=media-writer-git
+pkgver=4.0.95.r18.g9cb6189
+pkgrel=1
+pkgdesc='Tool that helps users put Fedora images on their portable drives such as flash disks'
+arch=('any')
+url="https://github.com/MartinBriza/MediaWriter"
+license=('GPL3')
+depends=('qt5-base')
+optdepends=()
+provides=('media-writer')
+conflicts=()
+source=(
+  "$_pkgname"::"git+https://github.com/MartinBriza/MediaWriter.git"
+)
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$_pkgname"
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "${srcdir}/$_pkgname"
+  qmake PREFIX="/usr" .
+  make
+}
+
+package() {
+  cd "$srcdir/$_pkgname"
+  make INSTALL_ROOT="$pkgdir" install
+}
