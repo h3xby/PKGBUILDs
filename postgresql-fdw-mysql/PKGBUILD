@@ -1,0 +1,22 @@
+_pkgname=mysql_fdw
+pkgname=postgresql-fdw-mysql
+pkgver=2.2.0
+pkgrel=1
+pkgdesc="PostgreSQL foreign data wrapper for MySQL"
+arch=('i686' 'x86_64')
+url="https://github.com/EnterpriseDB/mysql_fdw"
+license=('LGPL3')
+depends=('libmariadbclient' 'postgresql')
+_relname="REL-${pkgver//\./_}"
+source=("https://github.com/EnterpriseDB/${_pkgname}/archive/${_relname}.tar.gz")
+md5sums=('4b74f8e839584898bbad6ef83e8e60dd')
+
+build() {
+	cd "${_pkgname}-${_relname}"
+	make USE_PGXS=1
+}
+
+package() {
+	cd "${_pkgname}-${_relname}"
+	make USE_PGXS=1 DESTDIR="${pkgdir}" install
+}
